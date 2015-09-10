@@ -139,6 +139,7 @@ func GetDashboardFromJsonFile(c *middleware.Context) {
 
 	dash := dtos.DashboardFullWithMeta{Dashboard: dashboard.Data}
 	dash.Meta.Type = m.DashTypeJson
+    dash.Meta.CanEdit = c.OrgRole == m.ROLE_ADMIN || c.OrgRole == m.ROLE_EDITOR || c.OrgRole == m.ROLE_READ_ONLY_EDITOR
 
 	c.JSON(200, &dash)
 }
