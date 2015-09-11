@@ -1,10 +1,9 @@
 package search
 
 import (
-	"log"
 	"path/filepath"
 	"sort"
-
+    "github.com/grafana/grafana/pkg/log"
 	"github.com/grafana/grafana/pkg/bus"
 	m "github.com/grafana/grafana/pkg/models"
 	"github.com/grafana/grafana/pkg/setting"
@@ -18,7 +17,7 @@ func Init() {
 	jsonIndexCfg, _ := setting.Cfg.GetSection("dashboards.json")
 
 	if jsonIndexCfg == nil {
-		log.Fatal("Config section missing: dashboards.json")
+		log.Fatal(3, "Config section missing: dashboards.json", nil)
 		return
 	}
 
