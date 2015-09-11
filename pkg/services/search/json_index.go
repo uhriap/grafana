@@ -54,10 +54,6 @@ func (index *JsonDashIndex) Search(query *Query) ([]*Hit, error) {
 	queryStr := strings.ToLower(query.Title)
 
 	for _, item := range index.items {
-		if len(results) > query.Limit {
-			break
-		}
-
 		// add results with matchig title filter
 		if strings.Contains(item.TitleLower, queryStr) {
 			results = append(results, &Hit{
