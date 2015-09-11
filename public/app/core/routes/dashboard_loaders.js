@@ -31,6 +31,7 @@ function (coreModule) {
       meta: { canStar: false, canShare: false },
       dashboard: {
         title: "New dashboard",
+        timezone: "utc",
         rows: [{ height: '250px', panels:[] }]
       },
     }, $scope);
