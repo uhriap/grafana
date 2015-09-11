@@ -107,7 +107,7 @@ function (angular, _) {
           }]);
         }
 
-        return $scope.searchDashboards(linkDef, 7);
+        return $scope.searchDashboards(linkDef);
       }
 
       if (linkDef.type === 'link') {
