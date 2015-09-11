@@ -39,6 +39,7 @@ function (coreModule) {
             isNew: true,
           }
         ]
+        timezone: "utc",
       },
     }, $scope);
   });
