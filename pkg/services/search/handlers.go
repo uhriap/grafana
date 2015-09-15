@@ -70,6 +70,15 @@ func searchHandler(query *Query) error {
 		hits = filtered
 	}
 
+	// filter out private results
+	filtered := HitList{}
+	for _, hit := range hits {
+		if !hit.Private || query.UserId == hit.UserId {
+			filtered = append(filtered, hit)
+		}
+	}
+	hits = filtered
+
 	// sort main result array
 	sort.Sort(hits)
 

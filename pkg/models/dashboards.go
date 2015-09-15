@@ -14,6 +14,7 @@ var (
 	ErrDashboardSnapshotNotFound   = errors.New("Dashboard snapshot not found")
 	ErrDashboardWithSameNameExists = errors.New("A dashboard with the same name already exists")
 	ErrDashboardVersionMismatch    = errors.New("The dashboard has been changed by someone else")
+	ErrDashboardUserMismatch       = errors.New("The dashboard owned by another user")
 )
 
 var (
@@ -29,6 +30,8 @@ type Dashboard struct {
 	Slug    string
 	OrgId   int64
 	Version int
+	UserId  int64
+	Private bool
 
 	Created time.Time
 	Updated time.Time
@@ -78,6 +81,13 @@ func NewDashboardFromJson(data map[string]interface{}) *Dashboard {
 		dash.Data["version"] = 0
 	}
 
+	if dash.Data["UserId"] != nil {
+		dash.UserId = int64(dash.Data["UserId"].(float64))
+		if dash.Data["Private"] != nil {
+			dash.Private = dash.Data["Private"].(bool)
+		}
+	}
+
 	return dash
 }
 
@@ -85,6 +95,8 @@ func NewDashboardFromJson(data map[string]interface{}) *Dashboard {
 func (cmd *SaveDashboardCommand) GetDashboardModel() *Dashboard {
 	dash := NewDashboardFromJson(cmd.Dashboard)
 	dash.OrgId = cmd.OrgId
+	dash.UserId = cmd.UserId
+	dash.Private = cmd.Private
 	dash.UpdateSlug()
 	return dash
 }
@@ -108,6 +120,8 @@ type SaveDashboardCommand struct {
 	Dashboard map[string]interface{} `json:"dashboard" binding:"Required"`
 	Overwrite bool                   `json:"overwrite"`
 	OrgId     int64                  `json:"-"`
+	UserId    int64					 `json:"-"`
+	Private   bool                   `json:"Private"`
 
 	Result *Dashboard
 }
