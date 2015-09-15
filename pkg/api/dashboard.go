@@ -114,6 +114,7 @@ func DeleteDashboard(c *middleware.Context) {
 
 func PostDashboard(c *middleware.Context, cmd m.SaveDashboardCommand) Response {
 	cmd.OrgId = c.OrgId
+	cmd.UserId = c.UserId
 
 	if !c.IsSignedIn {
 		cmd.UserId = -1
@@ -164,6 +165,10 @@ func PostDashboard(c *middleware.Context, cmd m.SaveDashboardCommand) Response {
 		}
 		if err == m.ErrDashboardNotFound {
 			return Json(404, util.DynMap{"status": "not-found", "message": err.Error()})
+		}
+		if err == m.ErrDashboardUserMismatch {
+			c.JSON(403, util.DynMap{"status": "user-mismatch", "message": err.Error()})
+			return
 		}
 		return ApiError(500, "Failed to save dashboard", err)
 	}

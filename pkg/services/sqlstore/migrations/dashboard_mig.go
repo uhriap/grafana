@@ -93,6 +93,28 @@ func addDashboardMigration(mg *Migrator) {
 		Postgres("SELECT 0;").
 		Mysql("ALTER TABLE dashboard MODIFY data MEDIUMTEXT;"))
 
+	// ---------------------
+	// Add private and user_id columns
+	var columnPrivate = Column{
+		Name:     "private",
+		Type:     DB_Bool,
+		Nullable: false,
+		Default:  "0",
+	}
+	mg.AddMigration("add private column to dashbaord", new(AddColumnMigration).
+		Table("dashboard").
+		Column(&columnPrivate))
+
+	var columnUserId = Column{
+		Name:     "user_id",
+		Type:     DB_BigInt,
+		Nullable: false,
+		Default:  "0",
+	}
+	mg.AddMigration("add user_id column to dashbaord", new(AddColumnMigration).
+		Table("dashboard").
+		Column(&columnUserId))
+
 	// add column to store updater of a dashboard
 	mg.AddMigration("Add column updated_by in dashboard - v2", NewAddColumnMigration(dashboardV2, &Column{
 		Name: "updated_by", Type: DB_Int, Nullable: true,
