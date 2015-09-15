@@ -15,6 +15,7 @@ var (
 	ErrDashboardSnapshotNotFound   = errors.New("Dashboard snapshot not found")
 	ErrDashboardWithSameNameExists = errors.New("A dashboard with the same name already exists")
 	ErrDashboardVersionMismatch    = errors.New("The dashboard has been changed by someone else")
+	ErrDashboardUserMismatch       = errors.New("The dashboard owned by another user")
 )
 
 type UpdatePluginDashboardError struct {
@@ -40,6 +41,8 @@ type Dashboard struct {
 	GnetId   int64
 	Version  int
 	PluginId string
+	UserId   int64
+	Private  bool
 
 	Created time.Time
 	Updated time.Time
@@ -91,6 +94,13 @@ func NewDashboardFromJson(data *simplejson.Json) *Dashboard {
 		dash.GnetId = int64(gnetId)
 	}
 
+	if dash.Data["UserId"] != nil {
+		dash.UserId = int64(dash.Data["UserId"].(float64))
+		if dash.Data["Private"] != nil {
+			dash.Private = dash.Data["Private"].(bool)
+		}
+	}
+
 	return dash
 }
 
@@ -105,6 +115,8 @@ func (cmd *SaveDashboardCommand) GetDashboardModel() *Dashboard {
 	dash.UpdatedBy = cmd.UserId
 	dash.OrgId = cmd.OrgId
 	dash.PluginId = cmd.PluginId
+	dash.UserId = cmd.UserId
+	dash.Private = cmd.Private
 	dash.UpdateSlug()
 	return dash
 }
@@ -130,6 +142,8 @@ type SaveDashboardCommand struct {
 	OrgId     int64            `json:"-"`
 	Overwrite bool             `json:"overwrite"`
 	PluginId  string           `json:"-"`
+	UserId    int64            `json:"-"`
+	Private   bool             `json:"Private"`
 
 	Result *Dashboard
 }

@@ -3,9 +3,9 @@ package sqlstore
 import (
 	"bytes"
 	"fmt"
-
 	"github.com/go-xorm/xorm"
 	"github.com/grafana/grafana/pkg/bus"
+	"github.com/grafana/grafana/pkg/log"
 	"github.com/grafana/grafana/pkg/metrics"
 	m "github.com/grafana/grafana/pkg/models"
 	"github.com/grafana/grafana/pkg/services/search"
@@ -37,7 +37,9 @@ func SaveDashboard(cmd *m.SaveDashboardCommand) error {
 			if !dashWithIdExists {
 				return m.ErrDashboardNotFound
 			}
-
+			if existing.UserId != dash.UserId {
+				return m.ErrDashboardUserMismatch
+			}
 			// check for is someone else has written in between
 			if dash.Version != existing.Version {
 				if cmd.Overwrite {
@@ -77,7 +79,7 @@ func SaveDashboard(cmd *m.SaveDashboardCommand) error {
 		} else {
 			dash.Version += 1
 			dash.Data.Set("version", dash.Version)
-			affectedRows, err = sess.Id(dash.Id).Update(dash)
+			affectedRows, err = sess.Id(dash.Id).AllCols().Update(dash)
 		}
 
 		if affectedRows == 0 {
@@ -122,10 +124,12 @@ func GetDashboard(query *m.GetDashboardQuery) error {
 }
 
 type DashboardSearchProjection struct {
-	Id    int64
-	Title string
-	Slug  string
-	Term  string
+	Id      int64
+	Title   string
+	Slug    string
+	UserId  int64
+	Private bool
+	Term    string
 }
 
 func SearchDashboards(query *search.FindPersistedDashboardsQuery) error {
@@ -136,6 +140,8 @@ func SearchDashboards(query *search.FindPersistedDashboardsQuery) error {
 					  dashboard.id,
 					  dashboard.title,
 					  dashboard.slug,
+					  dashboard.user_id,
+					  dashboard.private,
 					  dashboard_tag.term
 					FROM dashboard
 					LEFT OUTER JOIN dashboard_tag on dashboard_tag.dashboard_id = dashboard.id`)
@@ -187,11 +193,13 @@ func SearchDashboards(query *search.FindPersistedDashboardsQuery) error {
 		hit, exists := hits[item.Id]
 		if !exists {
 			hit = &search.Hit{
-				Id:    item.Id,
-				Title: item.Title,
-				Uri:   "db/" + item.Slug,
-				Type:  search.DashHitDB,
-				Tags:  []string{},
+				Id:      item.Id,
+				Title:   item.Title,
+				Uri:     "db/" + item.Slug,
+				Type:    search.DashHitDB,
+				Tags:    []string{},
+				UserId:  item.UserId,
+				Private: item.Private,
 			}
 			query.Result = append(query.Result, hit)
 			hits[item.Id] = hit

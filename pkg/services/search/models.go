@@ -16,6 +16,8 @@ type Hit struct {
 	Type      HitType  `json:"type"`
 	Tags      []string `json:"tags"`
 	IsStarred bool     `json:"isStarred"`
+	UserId    int64    `json:"UserId"`
+	Private   bool     `json:"Private"`
 }
 
 type HitList []*Hit
