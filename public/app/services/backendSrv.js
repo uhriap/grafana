@@ -128,8 +128,8 @@ function (angular, _, config) {
       options = (options || {});
       if (!('private' in options)) {
         options.private = true;
-      };
-      return this.post('/api/dashboards/db/', {dashboard: dash, overwrite: options.overwrite === true, private: options.private == true });
+      }
+      return this.post('/api/dashboards/db/', {dashboard: dash, overwrite: options.overwrite === true, private: options.private === true });
     };
 
   });
