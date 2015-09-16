@@ -6,12 +6,12 @@ function (angular) {
 
   var module = angular.module('grafana.controllers');
 
-  module.controller('SaveDashboardAsCtrl', function($scope, backendSrv, $location) {
+  module.controller('SaveDashboardAsCtrl', function($scope, backendSrv, $location, contextSrv) {
 
     $scope.init = function() {
       $scope.clone.id = null;
       $scope.clone.editable = true;
-      $scope.clone.title = $scope.clone.title + " Copy";
+      $scope.clone.title = $scope.clone.title + " Copy by " + contextSrv.user.name;
 
       // remove alerts
       $scope.clone.rows.forEach(function(row) {
