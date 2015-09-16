@@ -169,9 +169,14 @@ export class BackendSrv {
   }
 
   saveDashboard(dash, options) {
+    // FIXME
     options = (options || {});
-    return this.post('/api/dashboards/db/', {dashboard: dash, overwrite: options.overwrite === true});
+    if (!('private' in options)) {
+      options.private = true;
+    };
+    return this.post('/api/dashboards/db/', {dashboard: dash, overwrite: options.overwrite === true, private: options.private === true });
   }
 }
 
 coreModule.service('backendSrv', BackendSrv);
+
