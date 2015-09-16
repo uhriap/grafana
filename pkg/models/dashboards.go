@@ -81,10 +81,10 @@ func NewDashboardFromJson(data map[string]interface{}) *Dashboard {
 		dash.Data["version"] = 0
 	}
 
-	if dash.Data["UserId"] != nil {
-		dash.UserId = int64(dash.Data["UserId"].(float64))
-		if dash.Data["Private"] != nil {
-			dash.Private = dash.Data["Private"].(bool)
+	if dash.Data["userId"] != nil {
+		dash.UserId = int64(dash.Data["userId"].(float64))
+		if dash.Data["private"] != nil {
+			dash.Private = dash.Data["private"].(bool)
 		}
 	}
 
@@ -121,7 +121,7 @@ type SaveDashboardCommand struct {
 	Overwrite bool                   `json:"overwrite"`
 	OrgId     int64                  `json:"-"`
 	UserId    int64					 `json:"-"`
-	Private   bool                   `json:"Private"`
+	Private   bool                   `json:"private"`
 
 	Result *Dashboard
 }

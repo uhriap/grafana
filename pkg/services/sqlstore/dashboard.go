@@ -3,7 +3,6 @@ package sqlstore
 import (
 	"bytes"
 	"fmt"
-    "github.com/grafana/grafana/pkg/log"
 	"github.com/go-xorm/xorm"
 	"github.com/grafana/grafana/pkg/bus"
 	"github.com/grafana/grafana/pkg/metrics"
