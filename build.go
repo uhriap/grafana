@@ -387,9 +387,9 @@ func build(binaryName, pkg string, tags []string) {
 func ldflags() string {
 	var b bytes.Buffer
 	b.WriteString("-w")
-	b.WriteString(fmt.Sprintf(" -X main.version=%s", version))
-	b.WriteString(fmt.Sprintf(" -X main.commit=%s", getGitSha()))
-	b.WriteString(fmt.Sprintf(" -X main.buildstamp=%d", buildStamp()))
+	b.WriteString(fmt.Sprintf(" -X main.version %s", version))
+	b.WriteString(fmt.Sprintf(" -X main.commit %s", getGitSha()))
+	b.WriteString(fmt.Sprintf(" -X main.buildstamp %d", buildStamp()))
 	return b.String()
 }
 
