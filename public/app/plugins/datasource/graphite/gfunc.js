@@ -471,6 +471,11 @@ function (_, $) {
   });
 
   addFuncDef({
+    name: 'skip',
+    category: categories.Filter,
+  });
+
+  addFuncDef({
     name: 'averageAbove',
     category: categories.Filter,
     params: [{ name: "n", type: "int", }],
