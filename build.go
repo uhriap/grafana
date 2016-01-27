@@ -252,6 +252,7 @@ func createPackage(options linuxPackageOptions) {
 		"--config-files", options.initdScriptFilePath,
 		"--config-files", options.etcDefaultFilePath,
 		"--config-files", options.systemdServiceFilePath,
+		"--config-files", filepath.Join(options.homeDir, "public/dashboards/home.json"),
 		"--after-install", options.postinstSrc,
 		"--name", "grafana",
 		"--version", linuxPackageVersion,
@@ -270,6 +271,7 @@ func createPackage(options linuxPackageOptions) {
 	args = append(args, ".")
 
 	fmt.Println("Creating package: ", options.packageType)
+	fmt.Println("FPM args:", strings.Join(args, " "))
 	runPrint("fpm", append([]string{"-t", options.packageType}, args...)...)
 }
 
