@@ -466,6 +466,11 @@ function (_, $) {
   });
 
   addFuncDef({
+    name: 'excludeEmpty',
+    category: categories.Filter,
+  });
+
+  addFuncDef({
     name: 'averageAbove',
     category: categories.Filter,
     params: [{ name: "n", type: "int", }],
