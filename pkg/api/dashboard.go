@@ -151,8 +151,7 @@ func PostDashboard(c *middleware.Context, cmd m.SaveDashboardCommand) Response {
 			return Json(404, util.DynMap{"status": "not-found", "message": err.Error()})
 		}
 		if err == m.ErrDashboardUserMismatch {
-			c.JSON(403, util.DynMap{"status": "user-mismatch", "message": err.Error()})
-			return
+			return Json(403, util.DynMap{"status": "user-mismatch", "message": err.Error()})
 		}
 		return ApiError(500, "Failed to save dashboard", err)
 	}
