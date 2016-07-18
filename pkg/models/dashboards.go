@@ -95,10 +95,10 @@ func NewDashboardFromJson(data *simplejson.Json) *Dashboard {
 		dash.GnetId = int64(gnetId)
 	}
 
-	if dash.Data["userId"] != nil {
-		dash.UserId = int64(dash.Data["userId"].(float64))
-		if dash.Data["private"] != nil {
-			dash.Private = dash.Data["private"].(bool)
+	if id, err := dash.Data.Get("userId").Float64(); err == nil {
+		dash.UserId = int64(id)
+		if private, err := dash.Data.Get("private").Bool(); err == nil {
+			dash.Private = bool(private)
 		}
 	}
 
@@ -138,21 +138,12 @@ func (dash *Dashboard) UpdateSlug() {
 //
 
 type SaveDashboardCommand struct {
-<<<<<<< HEAD
 	Dashboard *simplejson.Json `json:"dashboard" binding:"Required"`
-	UserId    int64            `json:"userId"`
-	OrgId     int64            `json:"-"`
 	Overwrite bool             `json:"overwrite"`
+	OrgId     int64            `json:"-"`
 	PluginId  string           `json:"-"`
 	UserId    int64            `json:"-"`
-	Private   bool             `json:"Private"`
-=======
-	Dashboard map[string]interface{} `json:"dashboard" binding:"Required"`
-	Overwrite bool                   `json:"overwrite"`
-	OrgId     int64                  `json:"-"`
-	UserId    int64					 `json:"-"`
-	Private   bool                   `json:"private"`
->>>>>>> save button save as private by default now
+	Private   bool             `json:"private"`
 
 	Result *Dashboard
 }
