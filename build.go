@@ -332,7 +332,7 @@ func ChangeWorkingDir(dir string) {
 }
 
 func grunt(params ...string) {
-	runPrint("./node_modules/.bin/grunt", params...)
+	runPrint("node_modules/grunt-cli/bin/grunt", params...)
 }
 
 func gruntBuildArg(task string) []string {
