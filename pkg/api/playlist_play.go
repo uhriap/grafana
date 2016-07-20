@@ -34,6 +34,21 @@ func populateDashboardsById(dashboardByIds []int64, dashboardIdOrder map[int64]i
 	return result, nil
 }
 
+func populateDashboardsByUri(dashboardByUri []string, dashboardUriOrder map[string]int) dtos.PlaylistDashboardsSlice {
+	result := make(dtos.PlaylistDashboardsSlice, 0)
+
+	if len(dashboardByUri) > 0 {
+		for _, uri := range dashboardByUri {
+			result = append(result, dtos.PlaylistDashboard{
+				Uri:   uri,
+				Order: dashboardUriOrder[uri],
+			})
+		}
+	}
+
+	return result
+}
+
 func populateDashboardsByTag(orgId, userId int64, dashboardByTag []string, dashboardTagOrder map[string]int) dtos.PlaylistDashboardsSlice {
 	result := make(dtos.PlaylistDashboardsSlice, 0)
 
@@ -68,15 +83,22 @@ func LoadPlaylistDashboards(orgId, userId, playlistId int64) (dtos.PlaylistDashb
 	playlistItems, _ := LoadPlaylistItems(playlistId)
 
 	dashboardByIds := make([]int64, 0)
+	dashboardByUri := make([]string, 0)
 	dashboardByTag := make([]string, 0)
 	dashboardIdOrder := make(map[int64]int)
 	dashboardTagOrder := make(map[string]int)
+	dashboardUriOrder := make(map[int64]int)
 
 	for _, i := range playlistItems {
 		if i.Type == "dashboard_by_id" {
 			dashboardId, _ := strconv.ParseInt(i.Value, 10, 64)
 			dashboardByIds = append(dashboardByIds, dashboardId)
 			dashboardIdOrder[dashboardId] = i.Order
+		}
+
+		if i.Type == "dashboard_by_uri" {
+			dashboardByUri = append(dashboardByUri, i.Value)
+			dashboardUriOrder[i.Value] = i.Order
 		}
 
 		if i.Type == "dashboard_by_tag" {
@@ -90,6 +112,7 @@ func LoadPlaylistDashboards(orgId, userId, playlistId int64) (dtos.PlaylistDashb
 	var k, _ = populateDashboardsById(dashboardByIds, dashboardIdOrder)
 	result = append(result, k...)
 	result = append(result, populateDashboardsByTag(orgId, userId, dashboardByTag, dashboardTagOrder)...)
+	result = append(result, populateDashboardsByUri(dashboardByUri, dashboardUriOrder)...)
 
 	sort.Sort(sort.Reverse(result))
 	return result, nil

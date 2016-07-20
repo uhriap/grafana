@@ -37,7 +37,7 @@ export class PlaylistEditCtrl {
   filterFoundPlaylistItems() {
     this.filteredDashboards = _.reject(this.dashboardresult, (playlistItem) => {
       return _.find(this.playlistItems, (listPlaylistItem) => {
-        return parseInt(listPlaylistItem.value) === playlistItem.id;
+        return listPlayListItem.value === playlistItem.uri || parseInt(listPlaylistItem.value) === playlistItem.id;
       });
     });
 
@@ -49,8 +49,13 @@ export class PlaylistEditCtrl {
   }
 
   addPlaylistItem(playlistItem) {
-    playlistItem.value = playlistItem.id.toString();
-    playlistItem.type = 'dashboard_by_id';
+    if (playlistItem.id === 0) {
+      playlistItem.value = playlistItem.uri;
+      playlistItem.type = 'dashboard_by_uri';
+    } else {
+      playlistItem.value = playlistItem.id.toString();
+      playlistItem.type = 'dashboard_by_id';
+    }
     playlistItem.order = this.playlistItems.length + 1;
 
     this.playlistItems.push(playlistItem);
