@@ -58,7 +58,11 @@ func GetPlaylist(c *middleware.Context) Response {
 		return ApiError(500, "Playlist not found", err)
 	}
 
-	playlistDTOs, _ := LoadPlaylistItemDTOs(id)
+	playlistDTOs, err := LoadPlaylistItemDTOs(id)
+
+	if err != nil {
+		return Json(500, err)
+	}
 
 	dto := &m.PlaylistDTO{
 		Id:       cmd.Result.Id,

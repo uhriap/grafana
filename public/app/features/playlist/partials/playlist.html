@@ -79,6 +79,9 @@
 					<td ng-if="playlistItem.type === 'dashboard_by_id'">
 						<i class="icon-gf icon-gf-dashboard"></i>&nbsp;&nbsp;{{playlistItem.title}}
 					</td>
+					<td ng-if="playlistItem.type === 'dashboard_by_uri'">
+						<i class="icon-gf icon-gf-dashboard"></i>&nbsp;&nbsp;{{playlistItem.title}}
+					</td>
 					<td ng-if="playlistItem.type === 'dashboard_by_tag'">
 						<a class="search-result-tag label label-tag" tag-color-from-name="playlistItem.title">
 							<i class="fa fa-tag"></i>

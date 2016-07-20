@@ -31,6 +31,20 @@ func populateDashboardsById(dashboardByIds []int64) ([]m.PlaylistDashboardDto, e
 	return result, nil
 }
 
+func populateDashboardsByUri(dashboardByUri []string) []m.PlaylistDashboardDto {
+	result := make([]m.PlaylistDashboardDto, 0)
+
+	if len(dashboardByUri) > 0 {
+		for _, uri := range dashboardByUri {
+			result = append(result, m.PlaylistDashboardDto{
+				Uri: uri,
+			})
+		}
+	}
+
+	return result
+}
+
 func populateDashboardsByTag(orgId, userId int64, dashboardByTag []string) []m.PlaylistDashboardDto {
 	result := make([]m.PlaylistDashboardDto, 0)
 
@@ -64,12 +78,17 @@ func LoadPlaylistDashboards(orgId, userId, playlistId int64) ([]m.PlaylistDashbo
 	playlistItems, _ := LoadPlaylistItems(playlistId)
 
 	dashboardByIds := make([]int64, 0)
+	dashboardByUri := make([]string, 0)
 	dashboardByTag := make([]string, 0)
 
 	for _, i := range playlistItems {
 		if i.Type == "dashboard_by_id" {
 			dashboardId, _ := strconv.ParseInt(i.Value, 10, 64)
 			dashboardByIds = append(dashboardByIds, dashboardId)
+		}
+
+		if i.Type == "dashboard_by_uri" {
+			dashboardByUri = append(dashboardByUri, i.Value)
 		}
 
 		if i.Type == "dashboard_by_tag" {
@@ -82,6 +101,7 @@ func LoadPlaylistDashboards(orgId, userId, playlistId int64) ([]m.PlaylistDashbo
 	var k, _ = populateDashboardsById(dashboardByIds)
 	result = append(result, k...)
 	result = append(result, populateDashboardsByTag(orgId, userId, dashboardByTag)...)
+	result = append(result, populateDashboardsByUri(dashboardByUri)...)
 
 	return result, nil
 }
