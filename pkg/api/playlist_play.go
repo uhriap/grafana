@@ -87,7 +87,7 @@ func LoadPlaylistDashboards(orgId, userId, playlistId int64) (dtos.PlaylistDashb
 	dashboardByTag := make([]string, 0)
 	dashboardIdOrder := make(map[int64]int)
 	dashboardTagOrder := make(map[string]int)
-	dashboardUriOrder := make(map[int64]int)
+	dashboardUriOrder := make(map[string]int)
 
 	for _, i := range playlistItems {
 		if i.Type == "dashboard_by_id" {

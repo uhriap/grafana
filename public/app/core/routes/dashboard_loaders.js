@@ -31,6 +31,7 @@ function (coreModule) {
       meta: { canStar: false, canShare: false, isNew: true },
       dashboard: {
         title: "New dashboard",
+        timezone: "utc",
         rows: [
           {
             title: 'Dashboard Row',
@@ -39,7 +40,6 @@ function (coreModule) {
             isNew: true,
           }
         ]
-        timezone: "utc",
       },
     }, $scope);
   });
