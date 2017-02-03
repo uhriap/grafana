@@ -67,7 +67,7 @@ func GetDashboard(c *middleware.Context) {
 			Slug:      slug,
 			Type:      m.DashTypeDB,
 			CanStar:   c.IsSignedIn,
-			CanSave:   c.OrgRole == m.ROLE_ADMIN || c.OrgRole == m.ROLE_EDITOR,
+			CanSave:   dash.UserId == c.UserId && (c.OrgRole == m.ROLE_ADMIN || c.OrgRole == m.ROLE_EDITOR),
 			CanEdit:   canEditDashboard(c.OrgRole),
 			Created:   dash.Created,
 			Updated:   dash.Updated,
@@ -98,6 +98,11 @@ func DeleteDashboard(c *middleware.Context) {
 	query := m.GetDashboardQuery{Slug: slug, OrgId: c.OrgId}
 	if err := bus.Dispatch(&query); err != nil {
 		c.JsonApiErr(404, "Dashboard not found", nil)
+		return
+	}
+
+	if c.UserId != query.Result.UserId {
+		c.JsonApiErr(403, "The dashboard owned by another user", nil)
 		return
 	}
 
